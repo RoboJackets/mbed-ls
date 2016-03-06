@@ -102,7 +102,7 @@ class MbedLsToolsLinuxGeneric(MbedLsToolsBase):
 
             # Deducing mbed-enabled TargetID based on available targetID definition DB.
             # If TargetID from USBID is not recognized we will try to check URL in mbed.htm
-            mbed_htm_target_id = self.get_mbed_htm_target_id(device[2]) # device[2] is a 'mount_point'
+            mbed_htm_target_id = self.get_mbed_htm_target_id(device[2]) if device[2] else None # device[2] is a 'mount_point'
             if mbed_htm_target_id is not None:
                 mbed_htm_target_id_prefix = mbed_htm_target_id[0:4]
                 if mbed_htm_target_id_prefix in tids:
@@ -232,8 +232,7 @@ class MbedLsToolsLinuxGeneric(MbedLsToolsBase):
                     mbed_dev_serial = self.get_mbed_serial(serial_list, dhi)
                     # Print detected device
                     mbed_mount_point = self.get_mount_point(mbed_dev_disk, mount_list)
-                    if mbed_mount_point:
-                        result.append([mbed_name, mbed_dev_disk, mbed_mount_point, mbed_dev_serial, disk_hex_ids[dhi]])
+                    result.append([mbed_name, mbed_dev_disk, mbed_mount_point, mbed_dev_serial, disk_hex_ids[dhi]])
         return result
 
     def get_not_detected(self, tids, disk_list, serial_list, mount_list):
