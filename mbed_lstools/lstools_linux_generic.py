@@ -36,7 +36,7 @@ class MbedLsToolsLinuxGeneric(MbedLsToolsBase):
         self.nlp = re.compile(self.name_link_pattern)
         self.hup = re.compile(self.hex_uuid_pattern)
 
-    def list_mbeds(self):
+    def list_mbeds(self, list_unmounted=False):
         """! Returns detailed list of connected mbeds
         @return Returns list of structures with detailed info about each mbed
         @details Function returns list of dictionaries with mbed attributes such as mount point, TargetID name etc.
@@ -111,7 +111,8 @@ class MbedLsToolsLinuxGeneric(MbedLsToolsBase):
                     mbed['target_id'] = mbed_htm_target_id
             mbed['target_id_usb_id'] = tid
             mbed['target_id_mbed_htm'] = mbed_htm_target_id
-            result.append(mbed)
+            if mbed['mount_point'] != None or list_unmounted:
+                result.append(mbed)
 
             if None in mbed:
                 self.ERRORLEVEL_FLAG = -1

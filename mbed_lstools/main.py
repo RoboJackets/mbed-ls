@@ -125,6 +125,12 @@ def cmd_parser_setup():
                       action="store_true",
                       help='Ignores file ./mbedls.json with retarget data')
 
+    parser.add_option('-u', '--list-unmounted',
+                      dest='list_unmounted',
+                      default=False,
+                      action='store_true',
+                      help='List unmounted mbeds in addition to ones that are mounted.')
+
     parser.add_option('-d', '--debug',
                       dest='debug',
                       default=False,
@@ -182,16 +188,16 @@ def mbedls_main():
             print json.dumps(mbeds.mock_read(), indent=4)
 
     elif opts.json:
-        print json.dumps(mbeds.list_mbeds_ext(), indent=4, sort_keys=True)
+        print json.dumps(mbeds.list_mbeds_ext(list_unmounted=opts.list_unmounted), indent=4, sort_keys=True)
 
     elif opts.json_by_target_id:
-        print json.dumps(mbeds.list_mbeds_by_targetid(), indent=4, sort_keys=True)
+        print json.dumps(mbeds.list_mbeds_by_targetid(list_unmounted=opts.list_unmounted), indent=4, sort_keys=True)
 
     elif opts.json_platforms:
         print json.dumps(mbeds.list_platforms(), indent=4, sort_keys=True)
 
     elif opts.json_platforms_ext:
-        print json.dumps(mbeds.list_platforms_ext(), indent=4, sort_keys=True)
+        print json.dumps(mbeds.list_platforms_ext(list_unmounted=opts.list_unmounted), indent=4, sort_keys=True)
 
     elif opts.version:
         import pkg_resources  # part of setuptools
@@ -199,7 +205,7 @@ def mbedls_main():
         print version
 
     else:
-        print mbeds.get_string(border=not opts.simple, header=not opts.simple)
+        print mbeds.get_string(list_unmounted=opts.list_unmounted, border=not opts.simple, header=not opts.simple)
 
     if mbeds.DEBUG_FLAG:
         mbeds.debug(__name__, "Return code: %d" % mbeds.ERRORLEVEL_FLAG)

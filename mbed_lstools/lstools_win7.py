@@ -37,7 +37,7 @@ class MbedLsToolsWin7(MbedLsToolsBase):
             import winreg
         self.winreg = winreg
 
-    def list_mbeds(self):
+    def list_mbeds(self, list_unmounted=False):
         """! Returns detailed list of connected mbeds
             @return Returns list of structures with detailed info about each mbed
             @details Function returns list of dictionaries with mbed attributes such as mount point, TargetID name etc.
