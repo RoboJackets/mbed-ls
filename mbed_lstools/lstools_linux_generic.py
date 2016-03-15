@@ -17,6 +17,7 @@ limitations under the License.
 
 import re
 import subprocess
+import logging
 
 from lstools_base import MbedLsToolsBase
 
@@ -113,6 +114,10 @@ class MbedLsToolsLinuxGeneric(MbedLsToolsBase):
             mbed['target_id_mbed_htm'] = mbed_htm_target_id
             if mbed['mount_point'] != None or self.list_unmounted:
                 result.append(mbed)
+            else:
+                logging.warn(
+                    "MBED with target id '%s' is connected, but not mounted. "
+                    "Use the '-u' flag to include it in the list." % mbed['target_id'])
 
             if None in mbed:
                 self.ERRORLEVEL_FLAG = -1
