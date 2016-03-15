@@ -27,7 +27,7 @@ class MbedLsToolsDarwin(MbedLsToolsBase):
 
     mbed_volume_name_match = re.compile(r'(\bmbed\b|\bSEGGER MSD\b)', re.I)
 
-    def list_mbeds(self, list_unmounted=False):
+    def list_mbeds(self):
         """ returns mbed list with platform names if possible
         """
 

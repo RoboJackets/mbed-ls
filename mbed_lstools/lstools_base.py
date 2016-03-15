@@ -31,6 +31,7 @@ class MbedLsToolsBase:
         self.DEBUG_FLAG = False     # Used to enable debug code / prints
         self.ERRORLEVEL_FLAG = 0    # Used to return success code to environment
         self.retarget_data = {}          # Used to retarget mbed-enabled platform properties
+        self.list_unmounted = False # if True, unmounted mbeds are included in output list
 
         # If there is a local mocking data use it and add / override manufacture_ids
         mock_ids = self.mock_read()
@@ -267,7 +268,7 @@ class MbedLsToolsBase:
     usb_vendor_list = ['Ven_MBED', 'Ven_SEGGER']
 
     # Interface
-    def list_mbeds(self, list_unmounted=False):
+    def list_mbeds(self):
         """! Get information about mbeds connected to device
 
         @return Returns None or if no error MBED_BOARDS = [ <MBED_BOARD>, ]
@@ -283,14 +284,14 @@ class MbedLsToolsBase:
         """
         return None
 
-    def list_mbeds_ext(self, list_unmounted=False):
+    def list_mbeds_ext(self):
         """! Function adds extra information for each mbed device
         @return Returns list of mbed devices plus extended data like 'platform_name_unique'
         @details Get information about mbeds with extended parameters/info included
         """
         platform_names = {} # Count existing platforms and assign unique number
 
-        mbeds = self.list_mbeds(list_unmounted)
+        mbeds = self.list_mbeds()
         for i, val in enumerate(mbeds):
             platform_name = val['platform_name']
             if platform_name not in platform_names:
@@ -327,24 +328,24 @@ class MbedLsToolsBase:
                 self.debug(self.list_mbeds_ext.__name__, (mbeds[i]['platform_name_unique'], val['target_id']))
         return mbeds
 
-    def list_platforms(self, list_unmounted=False):
+    def list_platforms(self):
         """! Useful if you just want to know which platforms are currently available on the system
         @return List of (unique values) available platforms
         """
         result = []
-        mbeds = self.list_mbeds(list_unmounted)
+        mbeds = self.list_mbeds()
         for i, val in enumerate(mbeds):
             platform_name = str(val['platform_name'])
             if platform_name not in result:
                 result.append(platform_name)
         return result
 
-    def list_platforms_ext(self, list_unmounted=False):
+    def list_platforms_ext(self):
         """! Useful if you just want to know how many platforms of each type are currently available on the system
         @return Dict of platform: platform_count
         """
         result = {}
-        mbeds = self.list_mbeds(list_unmounted)
+        mbeds = self.list_mbeds()
         for i, val in enumerate(mbeds):
             platform_name = str(val['platform_name'])
             if platform_name not in result:
@@ -353,13 +354,13 @@ class MbedLsToolsBase:
                 result[platform_name] += 1
         return result
 
-    def list_mbeds_by_targetid(self, list_unmounted=False):
+    def list_mbeds_by_targetid(self):
         """! Get information about mbeds with extended parameters/info included
         @return Returns dictionary where keys are TargetIDs and values are mbed structures
         @details Ordered by target id (key: target_id).
         """
         result = {}
-        mbed_list = self.list_mbeds_ext(list_unmounted)
+        mbed_list = self.list_mbeds_ext()
         for mbed in mbed_list:
             target_id = mbed['target_id']
             result[target_id] = mbed
@@ -395,7 +396,7 @@ class MbedLsToolsBase:
         """
         return self.get_string()
 
-    def get_string(self, list_unmounted=False, border=False, header=True, padding_width=1, sortby='platform_name'):
+    def get_string(self, border=False, header=True, padding_width=1, sortby='platform_name'):
         """! Printing with some sql table like decorators
         @param border Table border visibility
         @param header Table header visibility
@@ -405,7 +406,7 @@ class MbedLsToolsBase:
         """
         from prettytable import PrettyTable
         result = ''
-        mbeds = self.list_mbeds_ext(list_unmounted)
+        mbeds = self.list_mbeds_ext()
         if mbeds:
             """ ['platform_name', 'mount_point', 'serial_port', 'target_id'] - columns generated from USB auto-detection
                 ['platform_name_unique', ...] - columns generated outside detection subsystem (OS dependent detection)
