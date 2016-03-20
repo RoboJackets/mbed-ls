@@ -36,7 +36,7 @@ Currently supported operating system:
 * Windows 7.
 * Ubuntu.
 * Linux (generic).
-* Mac OS X (Darwin).
+* Mac OS X (El Capitan & Yosemite).
 
 # Rationale
 
